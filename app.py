@@ -195,7 +195,7 @@ def main_system():
 
     # -- TELA: JULIO CESAR --
     elif choice == "JULIO CESAR":
-        st.title("EM AGRADECIMENTO AO DIGNISSIMO PROFESSOR JULIO CESAR")
+        st.title("🔝🔝EM AGRADECIMENTO AO DIGNISSIMO PROFESSOR JULIO CESAR🔝🔝")
         
         
         c1, c2 = st.columns([1, 3])
