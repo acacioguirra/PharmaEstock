@@ -60,34 +60,70 @@ def main_system():
         logout()
 
     # --- TELA: VISÃO GERAL ---
+    # --- TELA: VISÃO GERAL (ATUALIZADA) ---
     if choice == "Visão Geral":
         st.title("📊 Visão Geral do Estoque")
+        
+        # 1. Carregar dados
         dados = db.listar_medicamentos()
         
         if dados:
             df = pd.DataFrame(dados)
             
-            # Métricas
-            col1, col2, col3 = st.columns(3)
-            col1.metric("Total de Itens", len(df))
-            col2.metric("Quantidade em Estoque", df['quantidade'].sum())
+            # 2. Criar campo de busca/filtro
+            st.markdown("### 🔍 Consultar Medicamento")
+            termo_busca = st.text_input("Digite o nome do medicamento para buscar:", placeholder="Ex: Dipirona")
             
-            # Verificar Vencidos
-            hoje = datetime.now().date()
-            # Convertendo string de data para objeto date para comparação (simplificado)
-            # Idealmente, trate datas com formato consistente
-            df['vencido'] = df.apply(lambda x: "⚠️ SIM" if datetime.strptime(x['validade'], '%d/%m/%Y').date() < hoje else "Não", axis=1)
-            
-            vencidos = df[df['vencido'] == "⚠️ SIM"]
-            col3.metric("Itens Vencidos", len(vencidos), delta_color="inverse")
+            # 3. Lógica de Filtragem
+            if termo_busca:
+                # Filtra onde o 'nome' contém o texto digitado (ignora maiúsculas/minúsculas)
+                df_filtrado = df[df['nome'].str.contains(termo_busca, case=False, na=False)]
+            else:
+                df_filtrado = df # Se não digitar nada, mostra tudo
 
-            st.dataframe(df, use_container_width=True)
+            # 4. Exibição Inteligente
+            if df_filtrado.empty:
+                st.warning(f"Nenhum medicamento encontrado com o nome '{termo_busca}'.")
             
-            if not vencidos.empty:
-                st.warning("Atenção! Existem medicamentos vencidos no estoque:")
-                st.table(vencidos[['nome', 'lote', 'validade']])
+            else:
+                # Se encontrou exatamente 1 medicamento (ou se a lista for pequena), mostra destaque
+                if len(df_filtrado) == 1:
+                    item = df_filtrado.iloc[0]
+                    
+                    st.divider()
+                    st.subheader(f"📦 Detalhes de: {item['nome']}")
+                    
+                    # Cartões de destaque (Métricas)
+                    col1, col2, col3 = st.columns(3)
+                    
+                    # Coloração visual para validade
+                    hoje = datetime.now().date()
+                    data_val = datetime.strptime(item['validade'], '%d/%m/%Y').date()
+                    dias_vencimento = (data_val - hoje).days
+                    
+                    cor_delta = "normal"
+                    if dias_vencimento < 0:
+                        cor_delta = "inverse" # Vencido (Vermelho)
+                    elif dias_vencimento < 30:
+                        cor_delta = "off" # Perto de vencer (Cinza/Amarelo dependendo do tema)
+
+                    col1.metric("Quantidade em Estoque", f"{item['quantidade']} un")
+                    col2.metric("Data de Validade", item['validade'], delta=f"{dias_vencimento} dias", delta_color=cor_delta)
+                    col3.metric("Lote", item['lote'])
+                    st.divider()
+
+                # Tabela Geral (Sempre visível)
+                st.write(f"Resultados encontrados: {len(df_filtrado)}")
+                
+                # Destaca as colunas que você pediu
+                st.dataframe(
+                    df_filtrado[['nome', 'quantidade', 'validade', 'lote', 'fabricante']], 
+                    use_container_width=True,
+                    hide_index=True
+                )
+                
         else:
-            st.info("Nenhum medicamento cadastrado.")
+            st.info("Nenhum medicamento cadastrado no sistema ainda.")
 
     # --- TELA: CADASTRAR ---
     elif choice == "Cadastrar Medicamento":
