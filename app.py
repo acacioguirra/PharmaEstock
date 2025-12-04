@@ -195,13 +195,13 @@ def main_system():
 
     # -- TELA: JULIO CESAR --
     elif choice == "JULIO CESAR":
-        st.title("🔝")
+        st.title("🔝JULIO CESAR🔝")
         
         
         c1, c2 = st.columns([1, 3])
         
         with c2:
-            st.markdown("Em Agradecimento ao digníssimo professor Julio Cesar")
+            st.markdown("em Agradecimento ao digníssimo professor JULIO CESAR")
             st.write("") 
             
             
