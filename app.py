@@ -207,7 +207,7 @@ def main_system():
             
             if os.path.exists("julio.png"):
                 st.image("julio.png", width=300)
-                st.image("turma.png", width=200)
+                st.image("turma.png", width=300)
             else:
                 st.error("⚠️ Imagem 'julio.png' não encontrada na pasta do projeto.")
                 st.info("Por favor, adicione o arquivo 'julio.png' ao diretório.")
