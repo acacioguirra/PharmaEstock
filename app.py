@@ -195,19 +195,19 @@ def main_system():
 
     # -- TELA: JULIO CESAR --
     elif choice == "JULIO CESAR":
-        st.title("🔝🔝🔝🔝🔝🔝")
+        st.title("🔝")
         
         
-        c1, c2, c3 = st.columns([1, 2, 1])
+        c1, c2 = st.columns([1, 3])
         
         with c2:
-            st.markdown("### Em Agradecimento ao digníssimo professor Julio Cesar")
+            st.markdown("Em Agradecimento ao digníssimo professor Julio Cesar")
             st.write("") 
             
             
             if os.path.exists("julio.png"):
-                st.image("julio.png", width=350)
-                st.image("turma.png", width=350)
+                st.image("julio.png", width=200)
+                st.image("turma.png", width=200)
             else:
                 st.error("⚠️ Imagem 'julio.png' não encontrada na pasta do projeto.")
                 st.info("Por favor, adicione o arquivo 'julio.png' ao diretório.")
