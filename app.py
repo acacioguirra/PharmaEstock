@@ -10,7 +10,7 @@ st.set_page_config(page_title="PharmaStock", page_icon="💊", layout="wide")
 # Inicializar Banco de Dados
 db.init_db()
 
-# -- GERENCIAMENTO DE SESSÃO --
+# GERENCIAMENTO DE SESSÃO
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 if 'user_role' not in st.session_state:
@@ -42,17 +42,17 @@ def logout():
     st.session_state.username = None
     st.rerun()
 
-# -- TELAS DO SISTEMA --
+# TELAS DO SISTEMA
 
 def main_system():
-    # Sidebar
+    
     st.sidebar.title(f"Olá, {st.session_state.username}")
     st.sidebar.text(f"Perfil: {st.session_state.user_role.upper()}")
     
     
     menu_options = ["Visão Geral", "Cadastrar Medicamento", "Gerenciar Estoque", "JULIO CESAR"]
     
-    # Opção extra apenas para ADMIN
+    
     if st.session_state.user_role == 'admin':
         menu_options.append("Gerenciar Usuários")
         
@@ -61,7 +61,7 @@ def main_system():
     if st.sidebar.button("Sair"):
         logout()
 
-    # -- TELA: VISÃO GERAL --
+    # TELA: VISÃO GERAL
     if choice == "Visão Geral":
         st.title("📊 Visão Geral do Estoque")
         
@@ -101,9 +101,9 @@ def main_system():
                         
                         cor_delta = "normal"
                         if dias_vencimento < 0:
-                            cor_delta = "inverse" # Vencido
+                            cor_delta = "inverse" 
                         elif dias_vencimento < 30:
-                            cor_delta = "off" # Perto de vencer
+                            cor_delta = "off"
                             
                         delta_msg = f"{dias_vencimento} dias"
                     except:
@@ -125,7 +125,7 @@ def main_system():
         else:
             st.info("Nenhum medicamento cadastrado.")
 
-    # --- TELA: CADASTRAR ---
+    # TELA: CADASTRAR
     elif choice == "Cadastrar Medicamento":
         st.title("💊 Novo Medicamento")
         
@@ -157,7 +157,7 @@ def main_system():
                 else:
                     st.warning("Preencha os campos obrigatórios.")
 
-    # --- TELA: GERENCIAR ---
+    # TELA: GERENCIAR
     elif choice == "Gerenciar Estoque":
         st.title("📦 Gerenciamento de Estoque")
         dados = db.listar_medicamentos()
@@ -193,7 +193,7 @@ def main_system():
         else:
             st.info("Nada para gerenciar.")
 
-    # -- TELA: JULIO CESAR --
+    #TELA: JULIO CESAR
     elif choice == "JULIO CESAR":
         st.title("🔝🔝EM AGRADECIMENTO AO DIGNISSIMO PROFESSOR JULIO CESAR🔝🔝")
         
@@ -214,7 +214,7 @@ def main_system():
             st.write("") 
             st.markdown("#### Trabalho realizado por Acacio e Netinho")
 
-    # --- TELA: ADMIN ---
+    # TELA: ADMIN
     elif choice == "Gerenciar Usuários":
         st.title("👥 Gerenciamento de Usuários")
         st.info("Área restrita a Administradores")
@@ -234,7 +234,7 @@ def main_system():
                     else:
                         st.error("Usuário já existe.")
 
-# --- LÓGICA PRINCIPAL ---
+# LÓGICA PRINCIPAL
 if __name__ == "__main__":
     if st.session_state.logged_in:
         main_system()
